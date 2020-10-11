@@ -36,6 +36,12 @@ const init = async () => {
     });
 
     server.route({
+      method: 'PUT',
+      path: '/products/{id}',
+      handler: controller.updateProd
+    });
+
+    server.route({
       method: 'DELETE',
       path: '/products/{id}',
       handler: controller.delProd

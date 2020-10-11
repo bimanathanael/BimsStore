@@ -54,6 +54,35 @@ class Controllers{
         })
   }
 
+  static updateProd (request, h){
+    const id = request.params.id
+    const newProd = {
+      name: request.payload.name,
+      SKU: request.payload.SKU,
+      image: request.payload.image,
+      desc: request.payload.desc,
+      price: request.payload.price,
+    }
+
+    return Product.findByPk(id)
+      .then(prod => {
+        if(prod != null){
+          return prod.update(newProd)
+            .then ( success => {
+              return "success update product " + id
+            })
+            .catch ( err => {
+              return "failed with error " + err
+            })
+        } else {
+          return "Product not found"
+        }
+      })
+      .catch(err => {
+          return `Error: ${err}`
+        })
+  }
+
   static delProd (request, h){
     const id = request.params.id
 
