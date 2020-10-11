@@ -21,6 +21,8 @@ class Controllers{
     const id = request.params.id
     return Product.findByPk(id)
       .then(prod => {
+
+        //if product with requested ID is found
         if(prod !== null){
           return { 
             products: prod
@@ -66,6 +68,7 @@ class Controllers{
 
     return Product.findByPk(id)
       .then(prod => {
+        //if product with requested ID is found
         if(prod != null){
           return prod.update(newProd)
             .then ( success => {
@@ -88,6 +91,8 @@ class Controllers{
 
     return Product.findByPk(id)
       .then(prod => {
+
+        //if product with requested ID is found
         if(prod != null){
           return prod.destroy()
             .then ( success => {
