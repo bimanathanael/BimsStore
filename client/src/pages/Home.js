@@ -7,7 +7,7 @@ export const Home = () => {
   return (
     <>
       <div className="row">
-        <div className="col">
+        <div className="col mt-5">
           <h3>
             Welcome to Bims Store
           </h3>

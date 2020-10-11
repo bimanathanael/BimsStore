@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useLocalStore, useObserver } from 'mobx-react'
+import { useLocalObservable, useObserver } from 'mobx-react'
 import {Product} from '../components/Product.js'
 import { useHistory } from 'react-router';
 import swal from 'sweetalert';
@@ -7,7 +7,7 @@ import swal from 'sweetalert';
 const StoreContext = React.createContext()
 
 export const StoreProvider = ({children}) => {
-  const store = useLocalStore( () => ({
+  const store = useLocalObservable( () => ({
     products: [],
     product: "",
     oneProd: product => {
@@ -17,7 +17,7 @@ export const StoreProvider = ({children}) => {
       store.products.push(product);
     },
     updateProd: (id, product) => {
-      let newData = store.products.filter( oneProd => oneProd.id != id )
+      let newData = store.products.filter( oneProd => oneProd.id !== id )
       newData.push(product)
       store.products = newData
     },
@@ -76,11 +76,10 @@ export const DeleteProdBtn = ({id}) => {
   }
 
   return ( 
-    <a className="btn btn-danger"
+    <a className="btn btn-danger m-1"
     onClick={() => DeleteProduct()}>
       Delete
     </a>
-
   )
 }
 
@@ -204,7 +203,7 @@ export const UpdateProdBtn = ({id}) => {
   }
 
   return ( 
-    <a className="btn btn-info"
+    <a className="btn btn-info m-1"
     onClick={() => goToUpdatePage()}>
       Update
     </a>
@@ -226,7 +225,7 @@ export const UpdateProd = () => {
 
   useEffect( () => {
     setProduct(store.product)
-  }, [])
+  }, [store.product])
 
   const submitData = (e, id) => {
     e.preventDefault();
