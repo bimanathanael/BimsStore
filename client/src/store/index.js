@@ -33,20 +33,20 @@ export const StoreProvider = ({children}) => {
 
 export const FetchProducts = () => {
   const store = React.useContext(StoreContext)
-  
+
   const fetchData = () => {
     fetch('http://localhost:3000/products')
       .then(response => response.json())
       .then(data => {
-        console.log(data.products, '>>>>>products')
+        swal("Fetched!","Success Fetch Data", "success")
         store.fetchProds(data.products); 
       })
       .catch( err => {
-        console.log("err", err)
+        swal("Failed!","Failed Fetch Data", "error")
       })
   }
   return ( 
-    <button className="btn btn-info" onClick={ () => fetchData() }>
+    <button className="btn btn-info ml-2 mt-2" onClick={ () => fetchData() }>
       Fetch Data
     </button>
   )
@@ -56,7 +56,6 @@ export const DeleteProdBtn = ({id}) => {
   const store = React.useContext(StoreContext)
   
   const DeleteProduct = () => {
-    console.log(id, '<<id DALAM FUNCTION')
     fetch(`http://localhost:3000/products/${id}`, {
       method: "DELETE",
       headers: {
@@ -64,18 +63,16 @@ export const DeleteProdBtn = ({id}) => {
       }
     })
     .then( data => {
-      console.log("delete data success", data)
+      swal("Deleted!","Success Delete Data", "success");
       fetch('http://localhost:3000/products')
         .then(response => response.json())
         .then(data => {
-          console.log(data.products, '>>>>>products')
           store.fetchProds(data.products); 
         })
         .catch( err => {
-          console.log("err", err)
         })
     } )
-    .catch( error => console.log("delete data error", error) )
+    .catch( error => swal("Failed!","Failed Delete Data", "error") )
   }
 
   return ( 
@@ -113,7 +110,6 @@ export const AddProd = () => {
 
   const submitData = (e) => {
     e.preventDefault();
-    store.addProd(product);
     setProduct({
       name: "",
       SKU: "",
@@ -130,10 +126,11 @@ export const AddProd = () => {
     })
     .then(response => response.json())
     .then( data => {
-      console.log("add data success", data)
+      store.addProd(data.newProduct);
       history.push('/')
+      swal("Added!","Success Add Data", "success")
     } )
-    .catch( error => console.log("add data error") )
+    .catch( error => swal("Failed!", "Failed Add Data", "error") )
   }
 
   const onDataChanges = (e) => {
@@ -201,11 +198,9 @@ export const UpdateProdBtn = ({id}) => {
     })
     .then(response => response.json())
     .then( data => {
-      console.log("getone data success", data)
       store.oneProd(data.product); 
       history.push('/updateProduct')
     })
-    .catch( error => console.log("add data error", error) )
   }
 
   return ( 
@@ -230,7 +225,6 @@ export const UpdateProd = () => {
   });
 
   useEffect( () => {
-    console.log(store.product, "<store.product")
     setProduct(store.product)
   }, [])
 
@@ -252,6 +246,7 @@ export const UpdateProd = () => {
       body: JSON.stringify(product)
     })
     .then( data => {
+
       history.push('/')
       swal("Updated!","Success Update Data", "success");
     } )

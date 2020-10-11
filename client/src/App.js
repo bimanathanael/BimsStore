@@ -17,7 +17,7 @@ function App() {
     <div className="App">
       <StoreProvider>
         <Router>
-          <Link to="/"> Home</Link>
+          <Link className="btn btn-success ml-2 mt-2" to="/"> Home</Link>
           <Switch>
             <Route exact path="/">
               <Home />
