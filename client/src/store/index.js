@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useLocalStore, useObserver } from 'mobx-react'
 import {Product} from '../components/Product.js'
+import { useHistory } from 'react-router';
+import swal from 'sweetalert';
 
 const StoreContext = React.createContext()
 
@@ -8,8 +10,16 @@ export const StoreProvider = ({children}) => {
   const store = useLocalStore( () => ({
     products: [],
     product: "",
+    oneProd: product => {
+      store.product = product
+    },
     addProd: product => {
       store.products.push(product);
+    },
+    updateProd: (id, product) => {
+      let newData = store.products.filter( oneProd => oneProd.id != id )
+      newData.push(product)
+      store.products = newData
     },
     fetchProds: products => {
       store.products = products
@@ -23,7 +33,7 @@ export const StoreProvider = ({children}) => {
 
 export const FetchProducts = () => {
   const store = React.useContext(StoreContext)
-
+  
   const fetchData = () => {
     fetch('http://localhost:3000/products')
       .then(response => response.json())
@@ -36,12 +46,11 @@ export const FetchProducts = () => {
       })
   }
   return ( 
-    <button onClick={ () => fetchData() }>
+    <button className="btn btn-info" onClick={ () => fetchData() }>
       Fetch Data
     </button>
   )
 }
-
 
 export const DeleteProdBtn = ({id}) => {
   const store = React.useContext(StoreContext)
@@ -92,6 +101,8 @@ export const ProductsList = () => {
 
 export const AddProd = () => {
   const store = React.useContext(StoreContext);
+  const history = useHistory()
+
   const [product, setProduct] = React.useState({
     name: "",
     SKU: "",
@@ -118,7 +129,10 @@ export const AddProd = () => {
       body: JSON.stringify(product)
     })
     .then(response => response.json())
-    .then( data => console.log("add data success", data) )
+    .then( data => {
+      console.log("add data success", data)
+      history.push('/')
+    } )
     .catch( error => console.log("add data error") )
   }
 
@@ -151,6 +165,12 @@ export const AddProd = () => {
           onChange={e => onDataChanges(e)}/>
       </div>
       <div className="form-group">
+        <label htmlFor="exampleFormControlInput1">SKU</label>
+        <input type="text" name="SKU" className="form-control" placeholder="your product SKU . . ."
+          value={product.SKU}
+          onChange={e => onDataChanges(e)}/>
+      </div>
+      <div className="form-group">
         <label htmlFor="exampleFormControlInput1">Description</label>
         <input type="text" name="desc" className="form-control" placeholder="your product Description . . ."
           value={product.desc}
@@ -170,6 +190,7 @@ export const AddProd = () => {
 
 export const UpdateProdBtn = ({id}) => {
   const store = React.useContext(StoreContext)
+  const history = useHistory()
   
   const goToUpdatePage = () => {
     fetch(`http://localhost:3000/products/${id}`, {
@@ -181,7 +202,8 @@ export const UpdateProdBtn = ({id}) => {
     .then(response => response.json())
     .then( data => {
       console.log("getone data success", data)
-      store.product = data
+      store.oneProd(data.product); 
+      history.push('/updateProduct')
     })
     .catch( error => console.log("add data error", error) )
   }
@@ -191,13 +213,14 @@ export const UpdateProdBtn = ({id}) => {
     onClick={() => goToUpdatePage()}>
       Update
     </a>
-
   )
 }
 
 
 export const UpdateProd = () => {
   const store = React.useContext(StoreContext);
+  const history = useHistory()
+
   const [product, setProduct] = React.useState({
     name: "",
     SKU: "",
@@ -206,9 +229,14 @@ export const UpdateProd = () => {
     price: "",
   });
 
-  const submitData = (e) => {
+  useEffect( () => {
+    console.log(store.product, "<store.product")
+    setProduct(store.product)
+  }, [])
+
+  const submitData = (e, id) => {
     e.preventDefault();
-    store.addProd(product);
+    store.updateProd(id, product);
     setProduct({
       name: "",
       SKU: "",
@@ -216,16 +244,18 @@ export const UpdateProd = () => {
       desc: "",
       price: "",
     });
-    fetch('http://localhost:3000/products', {
-      method: "POST",
+    fetch(`http://localhost:3000/products/${id}`, {
+      method: "PUT",
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(product)
     })
-    .then(response => response.json())
-    .then( data => console.log("add data success", data) )
-    .catch( error => console.log("add data error", error) )
+    .then( data => {
+      history.push('/')
+      swal("Updated!","Success Update Data", "success");
+    } )
+    .catch( error => swal("Failed!","Failed update data", "error") )
   }
 
   const onDataChanges = (e) => {
@@ -242,7 +272,7 @@ export const UpdateProd = () => {
 
   return (
     <form
-      onSubmit={e => submitData(e)}
+      onSubmit={e => submitData(e, store.product.id)}
     >
       <div className="form-group">
         <label htmlFor="exampleFormControlInput1">Name</label>
@@ -268,7 +298,7 @@ export const UpdateProd = () => {
           value={product.price}
           onChange={e => onDataChanges(e)}/>
       </div>
-      <button className="btn btn-primary" type="submit">Add</button>
+      <button className="btn btn-primary" type="submit">Update</button>
     </form>
   );
 };

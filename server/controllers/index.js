@@ -6,6 +6,7 @@ class Controllers{
   }
 
   static getProd (request, h){
+    console.log("nmasuk")
     return Product.findAll()
       .then(prod => {
         return { 
@@ -25,7 +26,7 @@ class Controllers{
         //if product with requested ID is found
         if(prod !== null){
           return { 
-            products: prod
+            product: prod
           }
         } else {
           return "Product not Found"

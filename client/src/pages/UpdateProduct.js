@@ -1,7 +1,7 @@
 import React from 'react'
 import { UpdateProd } from "../store"
 
-export const AddProduct = () => {
+export const UpdateProduct = () => {
   return (
     <>
     <div className="container mt-5">

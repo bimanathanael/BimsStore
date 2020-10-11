@@ -9,6 +9,7 @@ import {
 import {Home} from './pages/Home.js'
 import {StoreProvider} from "./store"
 import {AddProduct} from './pages/AddProduct'
+import {UpdateProduct} from './pages/UpdateProduct'
 
 
 function App() {
@@ -23,6 +24,9 @@ function App() {
             </Route>
             <Route path="/addProduct">
               <AddProduct />
+            </Route>
+            <Route path="/updateProduct">
+              <UpdateProduct />
             </Route>
           </Switch>
         </Router>
