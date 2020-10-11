@@ -17,6 +17,23 @@ class Controllers{
         })
   }
 
+  static getProdById (request, h){
+    const id = request.params.id
+    return Product.findByPk(id)
+      .then(prod => {
+        if(prod !== null){
+          return { 
+            products: prod
+          }
+        } else {
+          return "Product not Found"
+        }
+      })
+      .catch(err => {
+          return `Error: ${err}`
+        })
+  }
+
   static addProd (request, h){
     const newProd = {
       name: request.payload.name,
@@ -35,7 +52,28 @@ class Controllers{
       .catch(err => {
           return `Error: ${err}`
         })
-    // return "This is Hello"
+  }
+
+  static delProd (request, h){
+    const id = request.params.id
+
+    return Product.findByPk(id)
+      .then(prod => {
+        if(prod != null){
+          return prod.destroy()
+            .then ( success => {
+              return "success delete product " + id
+            })
+            .catch ( err => {
+              return "failed with error " + err
+            })
+        } else {
+          return "Product not found"
+        }
+      })
+      .catch(err => {
+          return `Error: ${err}`
+        })
   }
 }
 
