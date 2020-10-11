@@ -1,12 +1,12 @@
 const {Product} = require('../models')
 
 class Controllers{
+
   static welcome (request, h) {
     return 'Welcome to Bims Store!';
   }
 
   static getProd (request, h){
-    console.log("nmasuk")
     return Product.findAll()
       .then(prod => {
         return { 
@@ -67,6 +67,7 @@ class Controllers{
       price: request.payload.price,
     }
 
+    //try find product first to avoid error direct update
     return Product.findByPk(id)
       .then(prod => {
         //if product with requested ID is found
@@ -90,6 +91,7 @@ class Controllers{
   static delProd (request, h){
     const id = request.params.id
 
+    //try find product first to avoid error direct delete
     return Product.findByPk(id)
       .then(prod => {
 
