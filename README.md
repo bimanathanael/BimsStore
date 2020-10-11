@@ -7,7 +7,7 @@ a fascinating online store with CRUD operation using ReactJs, MobX, HapiJs, and 
 - Enter to Server Folder and run `npm install`
 - Change database Postgre configuration under /server/config/config.json 
 - Run below command to setup databae Postgre
-  - `seqelize db:craete`
+  - `seqelize db:create`
   - `seqelize db:migrate`
 - To run Server : `npm start`
 - To run Client : `npm start`
@@ -16,14 +16,6 @@ a fascinating online store with CRUD operation using ReactJs, MobX, HapiJs, and 
 
 ### GET /products
 > Get all Products
-
-_Request Header_
-```
-```
-
-_Request Body_
-```
-```
 
 _Response (success)_
 ```
@@ -56,14 +48,6 @@ _Response (success)_
 ### GET /products/:id
 > Get Product by Id
 
-_Request Header_
-```
-```
-
-_Request Body_
-```
-```
-
 _Response (success)_
 ```
 {
@@ -83,10 +67,6 @@ _Response (success)_
 
 ### POST /products
 > Add new Product
-
-_Request Header_
-```
-```
 
 _Request Body_
 ```
@@ -116,10 +96,6 @@ _Response (success)_
 ### PUT /products/:id
 > Update one Product base on Id
 
-_Request Header_
-```
-```
-
 _Request Body_
 ```
   name  : <product name to be updated>
@@ -136,14 +112,6 @@ _Response (success)_
 
 ### DELETE /products/:id
 > Delete one Product base on Id
-
-_Request Header_
-```
-```
-
-_Request Body_
-```
-```
 
 _Response (success)_
 ```
